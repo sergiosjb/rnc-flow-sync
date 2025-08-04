@@ -18,12 +18,12 @@ export default function NovaRNC() {
 
   const [formData, setFormData] = useState({
     descricao: '',
-    requisito_ferido: '',
-    tipo_requisito: 'interno',
-    local_ocorrencia: '',
-    data_ocorrencia: '',
-    processo_afetado: '',
+    setor: '',
+    criticidade: 'media',
+    origem: '',
+    data_abertura: '',
     responsavel: '',
+    data_prazo: '',
   });
 
   const handleInputChange = (field: string, value: string) => {
@@ -91,66 +91,57 @@ export default function NovaRNC() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="tipo_requisito">Tipo de Requisito *</Label>
-                  <Select value={formData.tipo_requisito} onValueChange={(value) => handleInputChange('tipo_requisito', value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione o tipo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="interno">Interno</SelectItem>
-                      <SelectItem value="externo">Externo</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="requisito_ferido">Requisito Ferido *</Label>
+                  <Label htmlFor="setor">Setor *</Label>
                   <Input
-                    id="requisito_ferido"
-                    value={formData.requisito_ferido}
-                    onChange={(e) => handleInputChange('requisito_ferido', e.target.value)}
-                    placeholder="Ex: ISO 9001:2015 - Cláusula 8.1"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="local_ocorrencia">Local da Ocorrência *</Label>
-                  <Input
-                    id="local_ocorrencia"
-                    value={formData.local_ocorrencia}
-                    onChange={(e) => handleInputChange('local_ocorrencia', e.target.value)}
-                    placeholder="Ex: Linha de Produção 1, Almoxarifado..."
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="data_ocorrencia">Data da Ocorrência *</Label>
-                  <Input
-                    id="data_ocorrencia"
-                    type="date"
-                    value={formData.data_ocorrencia}
-                    onChange={(e) => handleInputChange('data_ocorrencia', e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="processo_afetado">Processo Afetado *</Label>
-                  <Input
-                    id="processo_afetado"
-                    value={formData.processo_afetado}
-                    onChange={(e) => handleInputChange('processo_afetado', e.target.value)}
+                    id="setor"
+                    value={formData.setor}
+                    onChange={(e) => handleInputChange('setor', e.target.value)}
                     placeholder="Ex: Produção, Qualidade, Compras..."
                     required
                   />
                 </div>
 
+                <div className="space-y-2">
+                  <Label htmlFor="criticidade">Criticidade *</Label>
+                  <Select value={formData.criticidade} onValueChange={(value) => handleInputChange('criticidade', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a criticidade" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="baixa">Baixa</SelectItem>
+                      <SelectItem value="media">Média</SelectItem>
+                      <SelectItem value="alta">Alta</SelectItem>
+                      <SelectItem value="critica">Crítica</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="origem">Origem *</Label>
+                  <Input
+                    id="origem"
+                    value={formData.origem}
+                    onChange={(e) => handleInputChange('origem', e.target.value)}
+                    placeholder="Ex: Auditoria Interna, Cliente, Fornecedor..."
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="data_abertura">Data de Abertura *</Label>
+                  <Input
+                    id="data_abertura"
+                    type="date"
+                    value={formData.data_abertura}
+                    onChange={(e) => handleInputChange('data_abertura', e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="responsavel">Responsável *</Label>
                   <Input
@@ -159,6 +150,16 @@ export default function NovaRNC() {
                     onChange={(e) => handleInputChange('responsavel', e.target.value)}
                     placeholder="Nome do responsável pelo processo"
                     required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="data_prazo">Data Prazo</Label>
+                  <Input
+                    id="data_prazo"
+                    type="date"
+                    value={formData.data_prazo}
+                    onChange={(e) => handleInputChange('data_prazo', e.target.value)}
                   />
                 </div>
               </div>
