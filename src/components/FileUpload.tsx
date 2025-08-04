@@ -35,6 +35,7 @@ export function FileUpload({ onFilesChange, existingFiles = [] }: FileUploadProp
       const uploadedPaths = await Promise.all(uploadPromises);
       
       const newFiles = [...files, ...uploadedPaths];
+      console.log('FileUpload: Updating files from', files, 'to', newFiles);
       setFiles(newFiles);
       onFilesChange(newFiles);
 
@@ -61,6 +62,7 @@ export function FileUpload({ onFilesChange, existingFiles = [] }: FileUploadProp
     try {
       const uploadedPath = await uploadFile(file);
       const newFiles = [...files, uploadedPath];
+      console.log('FileUpload: Camera capture - Updating files from', files, 'to', newFiles);
       setFiles(newFiles);
       onFilesChange(newFiles);
 

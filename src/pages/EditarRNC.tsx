@@ -33,6 +33,12 @@ export default function EditarRNC() {
 
   const [evidencias, setEvidencias] = useState<string[]>([]);
 
+  // Debug log for evidencias changes
+  const handleEvidenciasChange = (newEvidencias: string[]) => {
+    console.log('EditarRNC: Evidencias changed from', evidencias, 'to', newEvidencias);
+    setEvidencias(newEvidencias);
+  };
+
   useEffect(() => {
     if (id) {
       fetchRNC();
@@ -83,6 +89,7 @@ export default function EditarRNC() {
     setLoading(true);
 
     try {
+      console.log('EditarRNC: Submitting with evidencias:', evidencias);
       const { error } = await supabase
         .from('rncs')
         .update({
@@ -245,13 +252,13 @@ export default function EditarRNC() {
                   <EvidenciasDisplay 
                     evidencias={evidencias} 
                     canEdit={true} 
-                    onEvidenciasChange={setEvidencias} 
+                    onEvidenciasChange={handleEvidenciasChange} 
                   />
                 </div>
               )}
 
               <FileUpload
-                onFilesChange={setEvidencias}
+                onFilesChange={handleEvidenciasChange}
                 existingFiles={evidencias}
               />
             </CardContent>
