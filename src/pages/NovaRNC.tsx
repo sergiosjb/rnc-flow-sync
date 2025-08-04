@@ -35,11 +35,26 @@ export default function NovaRNC() {
     setLoading(true);
 
     try {
-      const { error } = await (supabase as any)
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('Usuário não autenticado');
+      }
+
+      // Generate RNC number
+      const { data: rncNumber, error: numberError } = await supabase
+        .rpc('generate_rnc_number');
+
+      if (numberError) throw numberError;
+
+      const { error } = await supabase
         .from('rncs')
         .insert([{
           ...formData,
-          status: 'aberto'
+          numero_rnc: rncNumber,
+          user_id: user.id,
+          status: 'aberta'
         }]);
 
       if (error) throw error;
