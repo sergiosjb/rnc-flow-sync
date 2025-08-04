@@ -24,11 +24,44 @@ interface RNC {
   updated_at: string;
 }
 
+interface AcaoImediata {
+  id: string;
+  descricao: string;
+  responsavel: string;
+  prazo?: string;
+  status: string;
+  observacoes?: string;
+  created_at: string;
+}
+
+interface AcaoCorretiva {
+  id: string;
+  descricao: string;
+  responsavel: string;
+  prazo?: string;
+  status: string;
+  observacoes?: string;
+  created_at: string;
+}
+
+interface AvaliacaoEficacia {
+  id: string;
+  descricao: string;
+  resultado: string;
+  data_avaliacao: string;
+  responsavel: string;
+  observacoes?: string;
+  created_at: string;
+}
+
 export default function RNCDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [rnc, setRnc] = useState<RNC | null>(null);
+  const [acoesImediatas, setAcoesImediatas] = useState<AcaoImediata[]>([]);
+  const [acoesCorretivas, setAcoesCorretivas] = useState<AcaoCorretiva[]>([]);
+  const [avaliacoesEficacia, setAvaliacoesEficacia] = useState<AvaliacaoEficacia[]>([]);
   const [loading, setLoading] = useState(true);
 
   const handleEditRNC = () => {
@@ -49,24 +82,22 @@ export default function RNCDetails() {
 
   useEffect(() => {
     if (id) {
-      fetchRNC();
+      fetchAllData();
     }
   }, [id]);
 
-  const fetchRNC = async () => {
+  const fetchAllData = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('rncs')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error) throw error;
-      setRnc(data);
+      await Promise.all([
+        fetchRNC(),
+        fetchAcoesImediatas(),
+        fetchAcoesCorretivas(),
+        fetchAvaliacoesEficacia()
+      ]);
     } catch (error: any) {
       toast({
-        title: "Erro ao carregar RNC",
+        title: "Erro ao carregar dados",
         description: error.message,
         variant: "destructive",
       });
@@ -74,6 +105,50 @@ export default function RNCDetails() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchRNC = async () => {
+    const { data, error } = await supabase
+      .from('rncs')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) throw error;
+    setRnc(data);
+  };
+
+  const fetchAcoesImediatas = async () => {
+    const { data, error } = await supabase
+      .from('acoes_imediatas')
+      .select('*')
+      .eq('rnc_id', id)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    setAcoesImediatas(data || []);
+  };
+
+  const fetchAcoesCorretivas = async () => {
+    const { data, error } = await supabase
+      .from('acoes_corretivas')
+      .select('*')
+      .eq('rnc_id', id)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    setAcoesCorretivas(data || []);
+  };
+
+  const fetchAvaliacoesEficacia = async () => {
+    const { data, error } = await supabase
+      .from('avaliacoes_eficacia')
+      .select('*')
+      .eq('rnc_id', id)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    setAvaliacoesEficacia(data || []);
   };
 
   const getStatusColor = (status: string) => {
@@ -113,6 +188,24 @@ export default function RNCDetails() {
       case 'alta': return 'Alta';
       case 'critica': return 'Crítica';
       default: return criticidade;
+    }
+  };
+
+  const getActionStatusColor = (status: string) => {
+    switch (status) {
+      case 'pendente': return 'destructive';
+      case 'em_andamento': return 'secondary';
+      case 'concluida': return 'default';
+      default: return 'secondary';
+    }
+  };
+
+  const getActionStatusLabel = (status: string) => {
+    switch (status) {
+      case 'pendente': return 'Pendente';
+      case 'em_andamento': return 'Em Andamento';
+      case 'concluida': return 'Concluída';
+      default: return status;
     }
   };
 
@@ -235,6 +328,130 @@ export default function RNCDetails() {
                       </div>
                     </div>
                   </>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Ações Imediatas */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  Ações Imediatas
+                  <Badge variant="outline">{acoesImediatas.length}</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {acoesImediatas.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    Nenhuma ação imediata registrada
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    {acoesImediatas.map((acao) => (
+                      <div key={acao.id} className="border rounded-lg p-4 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Badge variant={getActionStatusColor(acao.status)}>
+                            {getActionStatusLabel(acao.status)}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(acao.created_at).toLocaleDateString('pt-BR')}
+                          </span>
+                        </div>
+                        <p className="text-sm font-medium">{acao.descricao}</p>
+                        <div className="text-xs text-muted-foreground space-y-1">
+                          <p><span className="font-medium">Responsável:</span> {acao.responsavel}</p>
+                          {acao.prazo && (
+                            <p><span className="font-medium">Prazo:</span> {new Date(acao.prazo).toLocaleDateString('pt-BR')}</p>
+                          )}
+                          {acao.observacoes && (
+                            <p><span className="font-medium">Observações:</span> {acao.observacoes}</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Ações Corretivas */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  Ações Corretivas
+                  <Badge variant="outline">{acoesCorretivas.length}</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {acoesCorretivas.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    Nenhuma ação corretiva registrada
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    {acoesCorretivas.map((acao) => (
+                      <div key={acao.id} className="border rounded-lg p-4 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Badge variant={getActionStatusColor(acao.status)}>
+                            {getActionStatusLabel(acao.status)}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(acao.created_at).toLocaleDateString('pt-BR')}
+                          </span>
+                        </div>
+                        <p className="text-sm font-medium">{acao.descricao}</p>
+                        <div className="text-xs text-muted-foreground space-y-1">
+                          <p><span className="font-medium">Responsável:</span> {acao.responsavel}</p>
+                          {acao.prazo && (
+                            <p><span className="font-medium">Prazo:</span> {new Date(acao.prazo).toLocaleDateString('pt-BR')}</p>
+                          )}
+                          {acao.observacoes && (
+                            <p><span className="font-medium">Observações:</span> {acao.observacoes}</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Avaliações de Eficácia */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  Avaliações de Eficácia
+                  <Badge variant="outline">{avaliacoesEficacia.length}</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {avaliacoesEficacia.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    Nenhuma avaliação de eficácia registrada
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    {avaliacoesEficacia.map((avaliacao) => (
+                      <div key={avaliacao.id} className="border rounded-lg p-4 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-muted-foreground">
+                            Avaliada em: {new Date(avaliacao.data_avaliacao).toLocaleDateString('pt-BR')}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(avaliacao.created_at).toLocaleDateString('pt-BR')}
+                          </span>
+                        </div>
+                        <p className="text-sm font-medium">{avaliacao.descricao}</p>
+                        <div className="text-xs text-muted-foreground space-y-1">
+                          <p><span className="font-medium">Responsável:</span> {avaliacao.responsavel}</p>
+                          <p><span className="font-medium">Resultado:</span> {avaliacao.resultado}</p>
+                          {avaliacao.observacoes && (
+                            <p><span className="font-medium">Observações:</span> {avaliacao.observacoes}</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </CardContent>
             </Card>
