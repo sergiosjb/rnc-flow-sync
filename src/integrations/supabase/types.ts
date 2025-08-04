@@ -14,13 +14,225 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      acoes_corretivas: {
+        Row: {
+          created_at: string
+          descricao: string
+          id: string
+          observacoes: string | null
+          prazo: string | null
+          responsavel: string
+          rnc_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          descricao: string
+          id?: string
+          observacoes?: string | null
+          prazo?: string | null
+          responsavel: string
+          rnc_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string
+          id?: string
+          observacoes?: string | null
+          prazo?: string | null
+          responsavel?: string
+          rnc_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "acoes_corretivas_rnc_id_fkey"
+            columns: ["rnc_id"]
+            isOneToOne: false
+            referencedRelation: "rncs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      acoes_imediatas: {
+        Row: {
+          created_at: string
+          descricao: string
+          id: string
+          observacoes: string | null
+          prazo: string | null
+          responsavel: string
+          rnc_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          descricao: string
+          id?: string
+          observacoes?: string | null
+          prazo?: string | null
+          responsavel: string
+          rnc_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string
+          id?: string
+          observacoes?: string | null
+          prazo?: string | null
+          responsavel?: string
+          rnc_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "acoes_imediatas_rnc_id_fkey"
+            columns: ["rnc_id"]
+            isOneToOne: false
+            referencedRelation: "rncs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      avaliacoes_eficacia: {
+        Row: {
+          created_at: string
+          data_avaliacao: string
+          descricao: string
+          id: string
+          observacoes: string | null
+          responsavel: string
+          resultado: string
+          rnc_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data_avaliacao?: string
+          descricao: string
+          id?: string
+          observacoes?: string | null
+          responsavel: string
+          resultado: string
+          rnc_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data_avaliacao?: string
+          descricao?: string
+          id?: string
+          observacoes?: string | null
+          responsavel?: string
+          resultado?: string
+          rnc_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "avaliacoes_eficacia_rnc_id_fkey"
+            columns: ["rnc_id"]
+            isOneToOne: false
+            referencedRelation: "rncs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rncs: {
+        Row: {
+          created_at: string
+          criticidade: string
+          data_abertura: string
+          data_prazo: string | null
+          descricao: string
+          evidencias: Json | null
+          id: string
+          numero_rnc: string
+          origem: string
+          responsavel: string
+          setor: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          criticidade: string
+          data_abertura?: string
+          data_prazo?: string | null
+          descricao: string
+          evidencias?: Json | null
+          id?: string
+          numero_rnc: string
+          origem: string
+          responsavel: string
+          setor: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          criticidade?: string
+          data_abertura?: string
+          data_prazo?: string | null
+          descricao?: string
+          evidencias?: Json | null
+          id?: string
+          numero_rnc?: string
+          origem?: string
+          responsavel?: string
+          setor?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_rnc_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
