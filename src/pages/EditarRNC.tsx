@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { Save, ArrowLeft } from 'lucide-react';
 import { FileUpload } from '@/components/FileUpload';
+import { EvidenciasDisplay } from '@/components/EvidenciasDisplay';
 
 export default function EditarRNC() {
   const { id } = useParams<{ id: string }>();
@@ -237,6 +238,17 @@ export default function EditarRNC() {
                   />
                 </div>
               </div>
+
+              {/* Evidências Existentes */}
+              {evidencias.length > 0 && (
+                <div className="space-y-4">
+                  <EvidenciasDisplay 
+                    evidencias={evidencias} 
+                    canEdit={true} 
+                    onEvidenciasChange={setEvidencias} 
+                  />
+                </div>
+              )}
 
               <FileUpload
                 onFilesChange={setEvidencias}

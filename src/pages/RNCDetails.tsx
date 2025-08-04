@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Edit, Calendar, User, Building, AlertTriangle } from 'lucide-react';
+import { EvidenciasDisplay } from '@/components/EvidenciasDisplay';
 
 interface RNC {
   id: string;
@@ -20,6 +21,7 @@ interface RNC {
   status: string;
   data_abertura: string;
   data_prazo?: string;
+  evidencias?: string[];
   created_at: string;
   updated_at: string;
 }
@@ -115,7 +117,14 @@ export default function RNCDetails() {
       .single();
 
     if (error) throw error;
-    setRnc(data);
+    
+    // Convert evidencias to string array
+    const rncData = {
+      ...data,
+      evidencias: Array.isArray(data.evidencias) ? data.evidencias.map(item => String(item)) : []
+    };
+    
+    setRnc(rncData);
   };
 
   const fetchAcoesImediatas = async () => {
@@ -455,6 +464,9 @@ export default function RNCDetails() {
                 )}
               </CardContent>
             </Card>
+
+            {/* Evidências */}
+            <EvidenciasDisplay evidencias={rnc.evidencias || []} />
           </div>
 
           <div className="space-y-6">
