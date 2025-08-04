@@ -229,6 +229,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_rnc_with_number: {
+        Args: {
+          p_descricao: string
+          p_setor: string
+          p_criticidade: string
+          p_origem: string
+          p_data_abertura: string
+          p_responsavel: string
+          p_data_prazo: string
+          p_user_id: string
+          p_evidencias?: Json
+        }
+        Returns: string
+      }
       generate_rnc_number: {
         Args: Record<PropertyKey, never>
         Returns: string
