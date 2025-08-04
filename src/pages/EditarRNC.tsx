@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { Save, ArrowLeft } from 'lucide-react';
+import { FileUpload } from '@/components/FileUpload';
 
 export default function EditarRNC() {
   const { id } = useParams<{ id: string }>();
@@ -28,6 +29,8 @@ export default function EditarRNC() {
     data_prazo: '',
     status: 'aberta'
   });
+
+  const [evidencias, setEvidencias] = useState<string[]>([]);
 
   useEffect(() => {
     if (id) {
@@ -56,6 +59,8 @@ export default function EditarRNC() {
         data_prazo: data.data_prazo || '',
         status: data.status || 'aberta'
       });
+
+      setEvidencias(Array.isArray(data.evidencias) ? data.evidencias.map(item => String(item)) : []);
     } catch (error: any) {
       toast({
         title: "Erro ao carregar RNC",
@@ -79,7 +84,10 @@ export default function EditarRNC() {
     try {
       const { error } = await supabase
         .from('rncs')
-        .update(formData)
+        .update({
+          ...formData,
+          evidencias: evidencias
+        })
         .eq('id', id);
 
       if (error) throw error;
@@ -229,6 +237,11 @@ export default function EditarRNC() {
                   />
                 </div>
               </div>
+
+              <FileUpload
+                onFilesChange={setEvidencias}
+                existingFiles={evidencias}
+              />
             </CardContent>
           </Card>
 

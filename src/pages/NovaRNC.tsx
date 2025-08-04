@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { Save, ArrowLeft } from 'lucide-react';
+import { FileUpload } from '@/components/FileUpload';
 
 export default function NovaRNC() {
   const [loading, setLoading] = useState(false);
@@ -25,6 +26,8 @@ export default function NovaRNC() {
     responsavel: '',
     data_prazo: '',
   });
+
+  const [evidencias, setEvidencias] = useState<string[]>([]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -54,7 +57,8 @@ export default function NovaRNC() {
           ...formData,
           numero_rnc: rncNumber,
           user_id: user.id,
-          status: 'aberta'
+          status: 'aberta',
+          evidencias: evidencias
         }]);
 
       if (error) throw error;
@@ -178,6 +182,11 @@ export default function NovaRNC() {
                   />
                 </div>
               </div>
+
+              <FileUpload
+                onFilesChange={setEvidencias}
+                existingFiles={evidencias}
+              />
             </CardContent>
           </Card>
 
