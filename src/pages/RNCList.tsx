@@ -62,18 +62,20 @@ export default function RNCList() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'aberto': return 'destructive';
-      case 'em_avaliacao': return 'default';
-      case 'fechado': return 'secondary';
+      case 'aberta': return 'destructive';
+      case 'em_andamento': return 'default';
+      case 'fechada': return 'secondary';
+      case 'cancelada': return 'outline';
       default: return 'default';
     }
   };
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'aberto': return 'Aberto';
-      case 'em_avaliacao': return 'Em Avaliação';
-      case 'fechado': return 'Fechado';
+      case 'aberta': return 'Aberta';
+      case 'em_andamento': return 'Em Andamento';
+      case 'fechada': return 'Fechada';
+      case 'cancelada': return 'Cancelada';
       default: return status;
     }
   };
@@ -117,9 +119,10 @@ export default function RNCList() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos os Status</SelectItem>
-                <SelectItem value="aberto">Aberto</SelectItem>
-                <SelectItem value="em_avaliacao">Em Avaliação</SelectItem>
-                <SelectItem value="fechado">Fechado</SelectItem>
+                <SelectItem value="aberta">Aberta</SelectItem>
+                <SelectItem value="em_andamento">Em Andamento</SelectItem>
+                <SelectItem value="fechada">Fechada</SelectItem>
+                <SelectItem value="cancelada">Cancelada</SelectItem>
               </SelectContent>
             </Select>
           </div>
