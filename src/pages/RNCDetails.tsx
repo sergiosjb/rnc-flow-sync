@@ -31,6 +31,22 @@ export default function RNCDetails() {
   const [rnc, setRnc] = useState<RNC | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const handleEditRNC = () => {
+    navigate(`/editar-rnc/${id}`);
+  };
+
+  const handleAddImmediateAction = () => {
+    navigate(`/rnc/${id}/acao-imediata`);
+  };
+
+  const handleAddCorrectiveAction = () => {
+    navigate(`/rnc/${id}/acao-corretiva`);
+  };
+
+  const handleEvaluateEffectiveness = () => {
+    navigate(`/rnc/${id}/avaliacao-eficacia`);
+  };
+
   useEffect(() => {
     if (id) {
       fetchRNC();
@@ -148,7 +164,7 @@ export default function RNCDetails() {
               <p className="text-muted-foreground">Detalhes da não conformidade</p>
             </div>
           </div>
-          <Button>
+          <Button onClick={handleEditRNC}>
             <Edit className="mr-2 h-4 w-4" />
             Editar
           </Button>
@@ -265,13 +281,13 @@ export default function RNCDetails() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <Button className="w-full" variant="outline">
+                  <Button className="w-full" variant="outline" onClick={handleAddImmediateAction}>
                     Adicionar Ação Imediata
                   </Button>
-                  <Button className="w-full" variant="outline">
+                  <Button className="w-full" variant="outline" onClick={handleAddCorrectiveAction}>
                     Adicionar Ação Corretiva
                   </Button>
-                  <Button className="w-full" variant="outline">
+                  <Button className="w-full" variant="outline" onClick={handleEvaluateEffectiveness}>
                     Avaliar Eficácia
                   </Button>
                 </div>
