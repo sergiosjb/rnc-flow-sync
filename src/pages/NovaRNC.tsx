@@ -45,21 +45,19 @@ export default function NovaRNC() {
         throw new Error('Usuário não autenticado');
       }
 
-      // Generate RNC number
-      const { data: rncNumber, error: numberError } = await supabase
-        .rpc('generate_rnc_number');
-
-      if (numberError) throw numberError;
-
-      const { error } = await supabase
-        .from('rncs')
-        .insert([{
-          ...formData,
-          numero_rnc: rncNumber,
-          user_id: user.id,
-          status: 'aberta',
-          evidencias: evidencias
-        }]);
+      // Use a single query to generate number and insert atomically
+      const { data, error } = await supabase
+        .rpc('create_rnc_with_number', {
+          p_descricao: formData.descricao,
+          p_setor: formData.setor,
+          p_criticidade: formData.criticidade,
+          p_origem: formData.origem,
+          p_data_abertura: formData.data_abertura || new Date().toISOString().split('T')[0],
+          p_responsavel: formData.responsavel,
+          p_data_prazo: formData.data_prazo || null,
+          p_user_id: user.id,
+          p_evidencias: evidencias
+        });
 
       if (error) throw error;
 
