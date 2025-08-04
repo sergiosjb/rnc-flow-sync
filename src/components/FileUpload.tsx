@@ -116,42 +116,54 @@ export function FileUpload({ onFilesChange, existingFiles = [] }: FileUploadProp
       
       <div className="flex gap-2 flex-wrap">
         {/* Camera capture */}
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={uploading}
-        >
-          <Camera className="mr-2 h-4 w-4" />
-          Tirar Foto
+        <div className="relative">
           <input
             type="file"
             accept="image/*"
             capture="environment"
             onChange={handleCameraCapture}
-            className="absolute inset-0 opacity-0 cursor-pointer"
+            className="absolute inset-0 opacity-0 cursor-pointer z-10"
             disabled={uploading}
+            id="camera-input"
           />
-        </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={uploading}
+            asChild
+          >
+            <label htmlFor="camera-input" className="cursor-pointer">
+              <Camera className="mr-2 h-4 w-4" />
+              Tirar Foto
+            </label>
+          </Button>
+        </div>
 
         {/* File upload */}
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={uploading}
-        >
-          <Upload className="mr-2 h-4 w-4" />
-          Selecionar Arquivos
+        <div className="relative">
           <input
             type="file"
             multiple
             accept="image/*,application/pdf,.doc,.docx"
             onChange={handleFileSelect}
-            className="absolute inset-0 opacity-0 cursor-pointer"
+            className="absolute inset-0 opacity-0 cursor-pointer z-10"
             disabled={uploading}
+            id="file-input"
           />
-        </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={uploading}
+            asChild
+          >
+            <label htmlFor="file-input" className="cursor-pointer">
+              <Upload className="mr-2 h-4 w-4" />
+              Selecionar Arquivos
+            </label>
+          </Button>
+        </div>
       </div>
 
       {uploading && (
