@@ -14,8 +14,8 @@ interface RNC {
   numero_rnc: string;
   descricao: string;
   status: string;
-  processo_afetado: string;
-  data_ocorrencia: string;
+  setor: string;
+  data_abertura: string;
   responsavel: string;
   created_at: string;
 }
@@ -55,7 +55,7 @@ export default function RNCList() {
   const filteredRNCs = rncs.filter(rnc => {
     const matchesSearch = rnc.descricao.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          rnc.numero_rnc.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         rnc.processo_afetado.toLowerCase().includes(searchTerm.toLowerCase());
+                         rnc.setor.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || rnc.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -147,7 +147,7 @@ export default function RNCList() {
                   <div>
                     <CardTitle className="text-lg">{rnc.numero_rnc}</CardTitle>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {new Date(rnc.data_ocorrencia).toLocaleDateString('pt-BR')}
+                      {new Date(rnc.data_abertura).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
                   <Badge variant={getStatusColor(rnc.status)}>
@@ -159,7 +159,7 @@ export default function RNCList() {
                 <p className="text-sm mb-3 line-clamp-2">{rnc.descricao}</p>
                 <div className="flex items-center justify-between">
                   <div className="text-xs text-muted-foreground">
-                    <span className="font-medium">Processo:</span> {rnc.processo_afetado}
+                    <span className="font-medium">Setor:</span> {rnc.setor}
                     <br />
                     <span className="font-medium">Responsável:</span> {rnc.responsavel}
                   </div>
