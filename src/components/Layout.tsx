@@ -112,14 +112,14 @@ export function Layout({ children }: LayoutProps) {
           </nav>
         </aside>
 
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-6 pb-20">
           {children}
         </main>
       </div>
 
       {/* Mobile Content */}
       <div className="md:hidden">
-        <main className="p-4">
+        <main className="p-4 pb-20">
           {children}
         </main>
       </div>
