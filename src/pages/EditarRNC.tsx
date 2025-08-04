@@ -32,11 +32,14 @@ export default function EditarRNC() {
   });
 
   const [evidencias, setEvidencias] = useState<string[]>([]);
+  const [originalEvidencias, setOriginalEvidencias] = useState<string[]>([]);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   // Debug log for evidencias changes
   const handleEvidenciasChange = (newEvidencias: string[]) => {
     console.log('EditarRNC: Evidencias changed from', evidencias, 'to', newEvidencias);
     setEvidencias(newEvidencias);
+    setHasUnsavedChanges(JSON.stringify(newEvidencias) !== JSON.stringify(originalEvidencias));
   };
 
   useEffect(() => {
@@ -68,6 +71,7 @@ export default function EditarRNC() {
       });
 
       setEvidencias(Array.isArray(data.evidencias) ? data.evidencias.map(item => String(item)) : []);
+      setOriginalEvidencias(Array.isArray(data.evidencias) ? data.evidencias.map(item => String(item)) : []);
     } catch (error: any) {
       toast({
         title: "Erro ao carregar RNC",
@@ -82,6 +86,7 @@ export default function EditarRNC() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    setHasUnsavedChanges(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -104,6 +109,9 @@ export default function EditarRNC() {
         title: "RNC atualizada com sucesso!",
         description: "As alterações foram salvas.",
       });
+      
+      setHasUnsavedChanges(false);
+      setOriginalEvidencias(evidencias);
       
       navigate(`/rnc/${id}`);
     } catch (error: any) {
@@ -270,9 +278,15 @@ export default function EditarRNC() {
             </Button>
             <Button type="submit" disabled={loading}>
               <Save className="mr-2 h-4 w-4" />
-              {loading ? "Salvando..." : "Salvar Alterações"}
+              {loading ? "Salvando..." : hasUnsavedChanges ? "Salvar Alterações *" : "Salvar Alterações"}
             </Button>
           </div>
+          
+          {hasUnsavedChanges && (
+            <div className="text-sm text-orange-600 text-center">
+              * Há alterações não salvas. Clique em "Salvar Alterações" para confirmar.
+            </div>
+          )}
         </form>
       </div>
     </Layout>
